@@ -1,332 +1,432 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const unicorns = [
+const UNICORNS = [
   {
     id: 1,
-    name: "Aurora Unicorn",
-    type: "Celestial",
-    rarity: "Legendary",
-    element: "Light",
-    emoji: "✨",
-    rarityColor: "from-yellow-400 to-amber-300",
-    glowColor: "rgba(251,191,36,0.4)",
-    gradient: "from-violet-600 via-purple-500 to-pink-500",
-    cardGlow: "hover:shadow-[0_0_40px_rgba(167,139,250,0.5)]",
-    image: "https://cdn.poehali.dev/projects/b707820d-b663-4e18-b16b-3d3997d046cb/files/0395f6ea-7e1d-4513-881d-d61169a635e4.jpg",
-    description: "Born from the first light of dawn, the Aurora Unicorn weaves ribbons of color across the sky. Their mane shifts through every hue of the rainbow.",
-    powers: ["Color Weaving", "Dream Walking", "Healing Aura"],
-    habitat: "Mountain Peaks",
-    mood: "Joyful",
+    name: "Аврора",
+    latin: "Aurora Solaris",
+    rarity: "Легендарный",
+    element: "Свет",
+    habitat: "Горные вершины",
+    mood: "Радостный",
+    power: 98,
+    emoji: "☀️",
+    accent: "#f5c842",
+    accentDim: "rgba(245,200,66,0.1)",
+    accentGlow: "rgba(245,200,66,0.28)",
+    tag: "ЛЕГЕНДА",
+    description: "Рождённая из первого луча рассвета, Аврора ткёт ленты цвета по небосводу. Её грива переливается всеми оттенками радуги, а следы копыт превращаются в золотые цветы.",
+    powers: ["Ткачество цвета", "Хождение во снах", "Аура исцеления"],
   },
   {
     id: 2,
-    name: "Nebula Unicorn",
-    type: "Cosmic",
-    rarity: "Mythic",
-    element: "Space",
+    name: "Туманность",
+    latin: "Nebula Cosmica",
+    rarity: "Мифический",
+    element: "Космос",
+    habitat: "Разрывы пространства",
+    mood: "Таинственный",
+    power: 95,
     emoji: "🌌",
-    rarityColor: "from-blue-400 to-indigo-300",
-    glowColor: "rgba(99,102,241,0.4)",
-    gradient: "from-indigo-700 via-blue-600 to-cyan-500",
-    cardGlow: "hover:shadow-[0_0_40px_rgba(99,102,241,0.5)]",
-    image: "https://cdn.poehali.dev/projects/b707820d-b663-4e18-b16b-3d3997d046cb/files/9e3e3c55-d4e7-406c-a0a9-51903627a13d.jpg",
-    description: "Forged in the heart of dying stars, the Nebula Unicorn carries the cosmos within their coat. Stars are born wherever they gallop.",
-    powers: ["Star Creation", "Void Travel", "Gravity Bend"],
-    habitat: "Deep Space Rifts",
-    mood: "Mysterious",
+    accent: "#7b8fff",
+    accentDim: "rgba(123,143,255,0.1)",
+    accentGlow: "rgba(123,143,255,0.28)",
+    tag: "МИФ",
+    description: "Выкованная в сердце умирающих звёзд, Туманность несёт в себе целый космос. Звёзды рождаются там, где она скачет, и гаснут, когда она уходит.",
+    powers: ["Создание звёзд", "Путешествие сквозь пустоту", "Изгиб гравитации"],
   },
   {
     id: 3,
-    name: "Frost Unicorn",
-    type: "Elemental",
-    rarity: "Rare",
-    element: "Ice",
+    name: "Иней",
+    latin: "Glacies Aeterna",
+    rarity: "Редкий",
+    element: "Лёд",
+    habitat: "Вечная тундра",
+    mood: "Безмятежный",
+    power: 75,
     emoji: "❄️",
-    rarityColor: "from-cyan-300 to-sky-200",
-    glowColor: "rgba(34,211,238,0.4)",
-    gradient: "from-sky-600 via-cyan-500 to-teal-400",
-    cardGlow: "hover:shadow-[0_0_40px_rgba(34,211,238,0.5)]",
-    image: "https://cdn.poehali.dev/projects/b707820d-b663-4e18-b16b-3d3997d046cb/files/9e8c8720-a685-49f3-ab1c-931002a9ce17.jpg",
-    description: "Crystallized from ancient glaciers, the Frost Unicorn moves in silence. Their breath forms intricate snowflakes, each one unique across all realms.",
-    powers: ["Ice Sculpting", "Blizzard Call", "Crystal Vision"],
-    habitat: "Eternal Tundra",
-    mood: "Serene",
+    accent: "#7dd3fc",
+    accentDim: "rgba(125,211,252,0.1)",
+    accentGlow: "rgba(125,211,252,0.28)",
+    tag: "РЕДКИЙ",
+    description: "Кристаллизованный из древних ледников, Иней движется в тишине. Его дыхание формирует изящные снежинки — каждая единственная в своём роде.",
+    powers: ["Ледяная скульптура", "Призыв метели", "Кристальное зрение"],
   },
   {
     id: 4,
-    name: "Ember Unicorn",
-    type: "Elemental",
-    rarity: "Epic",
-    element: "Fire",
+    name: "Уголёк",
+    latin: "Ignis Perpetuus",
+    rarity: "Эпический",
+    element: "Огонь",
+    habitat: "Вулканическая кальдера",
+    mood: "Страстный",
+    power: 87,
     emoji: "🔥",
-    rarityColor: "from-orange-400 to-red-400",
-    glowColor: "rgba(249,115,22,0.4)",
-    gradient: "from-red-600 via-orange-500 to-yellow-400",
-    cardGlow: "hover:shadow-[0_0_40px_rgba(249,115,22,0.5)]",
-    image: null,
-    description: "Rising from volcanic depths, the Ember Unicorn blazes with inner fire. Their hooves leave smoldering flowers that bloom in flame.",
-    powers: ["Flame Dance", "Lava Walk", "Phoenix Rebirth"],
-    habitat: "Volcanic Caldera",
-    mood: "Passionate",
+    accent: "#fb923c",
+    accentDim: "rgba(251,146,60,0.1)",
+    accentGlow: "rgba(251,146,60,0.28)",
+    tag: "ЭПОС",
+    description: "Восставший из вулканических глубин, Уголёк пылает внутренним огнём. Его копыта оставляют тлеющие цветы, расцветающие в пламени.",
+    powers: ["Танец пламени", "Хождение по лаве", "Возрождение Феникса"],
   },
   {
     id: 5,
-    name: "Shadow Unicorn",
-    type: "Arcane",
-    rarity: "Epic",
-    element: "Dark",
+    name: "Тень",
+    latin: "Umbra Arcana",
+    rarity: "Эпический",
+    element: "Тьма",
+    habitat: "Сумеречное царство",
+    mood: "Загадочный",
+    power: 89,
     emoji: "🌑",
-    rarityColor: "from-purple-400 to-violet-400",
-    glowColor: "rgba(139,92,246,0.4)",
-    gradient: "from-gray-800 via-purple-900 to-violet-800",
-    cardGlow: "hover:shadow-[0_0_40px_rgba(139,92,246,0.5)]",
-    image: null,
-    description: "Woven from moonless nights, the Shadow Unicorn dwells between worlds. They carry secrets that even the stars dare not whisper.",
-    powers: ["Shadow Step", "Mind Reading", "Nightmare Guard"],
-    habitat: "Twilight Realm",
-    mood: "Enigmatic",
+    accent: "#c084fc",
+    accentDim: "rgba(192,132,252,0.1)",
+    accentGlow: "rgba(192,132,252,0.28)",
+    tag: "ЭПОС",
+    description: "Сотканная из безлунных ночей, Тень живёт между мирами. Она хранит тайны, о которых даже звёзды не решаются шептать.",
+    powers: ["Теневой шаг", "Чтение мыслей", "Страж кошмаров"],
   },
   {
     id: 6,
-    name: "Blossom Unicorn",
-    type: "Nature",
-    rarity: "Common",
-    element: "Flora",
+    name: "Цветок",
+    latin: "Flora Perpetua",
+    rarity: "Обычный",
+    element: "Природа",
+    habitat: "Зачарованные луга",
+    mood: "Нежный",
+    power: 58,
     emoji: "🌸",
-    rarityColor: "from-green-400 to-emerald-300",
-    glowColor: "rgba(52,211,153,0.4)",
-    gradient: "from-green-600 via-emerald-500 to-teal-400",
-    cardGlow: "hover:shadow-[0_0_40px_rgba(52,211,153,0.5)]",
-    image: null,
-    description: "Wherever the Blossom Unicorn runs, wildflowers burst forth from bare earth. Their mane is eternally woven with living vines and petals.",
-    powers: ["Growth Magic", "Petal Storm", "Nature Bond"],
-    habitat: "Enchanted Meadows",
-    mood: "Gentle",
+    accent: "#6ee7b7",
+    accentDim: "rgba(110,231,183,0.1)",
+    accentGlow: "rgba(110,231,183,0.28)",
+    tag: "ОБЫЧНЫЙ",
+    description: "Там, где бежит Цветок, из голой земли вырастают дикие цветы. Его грива вечно вплетена живыми лозами и лепестками.",
+    powers: ["Магия роста", "Буря лепестков", "Связь с природой"],
   },
 ];
 
-const rarityOrder = ["Legendary", "Mythic", "Epic", "Rare", "Common"];
+const FILTERS = ["Все", "Легендарный", "Мифический", "Эпический", "Редкий", "Обычный"];
 
-const rarityBadge: Record<string, string> = {
-  Legendary: "bg-gradient-to-r from-yellow-400 to-amber-300 text-yellow-900",
-  Mythic: "bg-gradient-to-r from-blue-400 to-indigo-400 text-indigo-900",
-  Epic: "bg-gradient-to-r from-purple-400 to-violet-400 text-purple-900",
-  Rare: "bg-gradient-to-r from-cyan-400 to-sky-300 text-sky-900",
-  Common: "bg-gradient-to-r from-green-400 to-emerald-300 text-green-900",
-};
-
-function SparkleIcon({ style }: { style?: React.CSSProperties }) {
+function PowerBar({ value, accent }: { value: number; accent: string }) {
   return (
-    <span
-      className="absolute animate-sparkle text-white/60 text-xs pointer-events-none select-none"
-      style={style}
-    >
-      ✦
-    </span>
-  );
-}
-
-function UnicornCard({ unicorn, index }: { unicorn: typeof unicorns[0]; index: number }) {
-  const [expanded, setExpanded] = useState(false);
-
-  return (
-    <div
-      className={`relative rounded-3xl overflow-hidden cursor-pointer transition-all duration-500 ${unicorn.cardGlow} opacity-0 animate-fade-up`}
-      style={{
-        animationDelay: `${index * 0.1}s`,
-        animationFillMode: "forwards",
-        background: "rgba(15,10,30,0.7)",
-        border: "1px solid rgba(255,255,255,0.1)",
-        backdropFilter: "blur(20px)",
-      }}
-      onClick={() => setExpanded(!expanded)}
-    >
+    <div className="relative h-[3px] rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
       <div
-        className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl opacity-30 pointer-events-none"
-        style={{ background: unicorn.glowColor }}
+        className="absolute left-0 top-0 h-full rounded-full"
+        style={{
+          width: `${value}%`,
+          background: `linear-gradient(90deg, ${accent}70, ${accent})`,
+          boxShadow: `0 0 6px ${accent}50`,
+          transition: "width 0.8s cubic-bezier(0.16,1,0.3,1)",
+        }}
       />
-
-      <div className={`relative h-52 bg-gradient-to-br ${unicorn.gradient} overflow-hidden`}>
-        {unicorn.image && (
-          <img
-            src={unicorn.image}
-            alt={unicorn.name}
-            className="w-full h-full object-cover mix-blend-overlay opacity-80"
-          />
-        )}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-7xl animate-float">{unicorn.emoji}</span>
-        </div>
-        <SparkleIcon style={{ top: "15%", left: "20%", animationDelay: "0s" }} />
-        <SparkleIcon style={{ top: "30%", right: "25%", animationDelay: "0.7s" }} />
-        <SparkleIcon style={{ bottom: "20%", left: "40%", animationDelay: "1.3s" }} />
-
-        <div className="absolute top-3 right-3">
-          <span className={`px-3 py-1 rounded-full text-xs font-bold tracking-wider ${rarityBadge[unicorn.rarity]}`}>
-            {unicorn.rarity}
-          </span>
-        </div>
-
-        <div className="absolute top-3 left-3">
-          <span className="px-3 py-1 rounded-full text-xs font-semibold bg-black/30 text-white/90 backdrop-blur-sm border border-white/20">
-            {unicorn.type}
-          </span>
-        </div>
-      </div>
-
-      <div className="p-5">
-        <div className="flex items-start justify-between mb-2">
-          <div>
-            <h2 className="font-nunito font-bold text-xl text-white leading-tight">
-              {unicorn.name}
-            </h2>
-            <p className="text-white/50 text-sm font-quicksand mt-0.5">
-              Element: <span className="text-white/70">{unicorn.element}</span>
-              {" · "}
-              <span className="text-white/70">{unicorn.habitat}</span>
-            </p>
-          </div>
-          <span
-            className="text-white/30 text-lg transition-transform duration-300 mt-1"
-            style={{ transform: expanded ? "rotate(180deg)" : "rotate(0deg)", display: "inline-block" }}
-          >
-            ▾
-          </span>
-        </div>
-
-        <p className="text-white/60 text-sm font-quicksand leading-relaxed line-clamp-2">
-          {unicorn.description}
-        </p>
-
-        {expanded && (
-          <div className="mt-4 space-y-3 border-t border-white/10 pt-4 animate-fade-up">
-            <div>
-              <p className="text-white/40 text-xs uppercase tracking-widest font-nunito mb-2">
-                Powers
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {unicorn.powers.map((p) => (
-                  <span
-                    key={p}
-                    className={`px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${unicorn.gradient} text-white/90`}
-                  >
-                    {p}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <p className="text-white/40 text-xs uppercase tracking-widest font-nunito">Mood:</p>
-              <span className="text-white/80 text-sm font-quicksand">{unicorn.mood}</span>
-            </div>
-          </div>
-        )}
-      </div>
     </div>
   );
 }
 
-export default function Index() {
-  const [filter, setFilter] = useState<string>("All");
-  const filters = ["All", ...rarityOrder];
+function Card({
+  u,
+  index,
+  open,
+  onToggle,
+}: {
+  u: (typeof UNICORNS)[0];
+  index: number;
+  open: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <article
+      className="opacity-0 animate-fade-up cursor-pointer select-none"
+      style={{ animationDelay: `${index * 0.07}s`, animationFillMode: "forwards" }}
+      onClick={onToggle}
+    >
+      <div
+        className="relative rounded-2xl overflow-hidden transition-all duration-500"
+        style={{
+          background: open
+            ? `linear-gradient(140deg, ${u.accentDim}, rgba(255,255,255,0.02) 70%)`
+            : "rgba(255,255,255,0.025)",
+          border: `1px solid ${open ? `${u.accent}45` : "rgba(255,255,255,0.06)"}`,
+          boxShadow: open ? `0 4px 32px ${u.accentGlow}` : "none",
+        }}
+      >
+        {/* Left accent bar */}
+        <div
+          className="absolute left-0 top-0 bottom-0 w-[2px] rounded-l-2xl transition-opacity duration-500"
+          style={{
+            background: `linear-gradient(180deg, transparent 10%, ${u.accent} 50%, transparent 90%)`,
+            opacity: open ? 1 : 0,
+          }}
+        />
 
-  const filtered =
-    filter === "All" ? unicorns : unicorns.filter((u) => u.rarity === filter);
+        {/* Main row */}
+        <div className="flex items-start gap-4 px-5 pt-5 pb-4">
+          {/* Icon */}
+          <div
+            className="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0 transition-all duration-500"
+            style={{
+              background: open
+                ? `radial-gradient(circle, ${u.accentDim} 0%, transparent 80%)`
+                : "rgba(255,255,255,0.04)",
+              border: `1px solid ${open ? `${u.accent}35` : "rgba(255,255,255,0.07)"}`,
+              boxShadow: open ? `0 0 16px ${u.accentGlow}` : "none",
+            }}
+          >
+            <span className={open ? "animate-float" : ""} style={{ filter: open ? `drop-shadow(0 0 5px ${u.accent})` : "none" }}>
+              {u.emoji}
+            </span>
+          </div>
+
+          {/* Info */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-baseline gap-2 mb-0.5 flex-wrap">
+              <h2
+                className="font-cormorant font-semibold text-xl text-white leading-none"
+                style={{ letterSpacing: "0.01em" }}
+              >
+                {u.name}
+              </h2>
+              <span
+                className="text-[8px] font-raleway font-bold tracking-[0.18em] px-1.5 py-0.5 rounded"
+                style={{ color: u.accent, background: `${u.accent}15`, border: `1px solid ${u.accent}30` }}
+              >
+                {u.tag}
+              </span>
+            </div>
+            <p className="font-cormorant italic text-sm mb-2.5" style={{ color: "rgba(255,255,255,0.3)" }}>
+              {u.latin}
+            </p>
+            <div className="flex items-center gap-2.5">
+              <PowerBar value={u.power} accent={u.accent} />
+              <span className="font-raleway text-xs font-semibold flex-shrink-0" style={{ color: u.accent }}>
+                {u.power}
+              </span>
+            </div>
+          </div>
+
+          {/* Arrow */}
+          <div
+            className="flex-shrink-0 mt-1.5 transition-transform duration-300"
+            style={{
+              transform: open ? "rotate(90deg)" : "rotate(0deg)",
+              color: open ? u.accent : "rgba(255,255,255,0.2)",
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M5 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+        </div>
+
+        {/* Meta pills row */}
+        <div className="px-5 pb-4 flex gap-3 flex-wrap">
+          {[
+            { l: "Элемент", v: u.element },
+            { l: "Место", v: u.habitat },
+            { l: "Нрав", v: u.mood },
+          ].map((m) => (
+            <div key={m.l} className="text-xs font-raleway">
+              <span style={{ color: "rgba(255,255,255,0.2)" }}>{m.l}: </span>
+              <span style={{ color: "rgba(255,255,255,0.55)" }}>{m.v}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Expanded */}
+        {open && (
+          <div
+            className="opacity-0 animate-reveal"
+            style={{ animationFillMode: "forwards" }}
+          >
+            <div
+              className="mx-5 mb-4 h-px"
+              style={{ background: `linear-gradient(90deg, transparent, ${u.accent}35, transparent)` }}
+            />
+            <div className="px-5 pb-5 space-y-4">
+              <p
+                className="font-cormorant italic text-[15px] leading-relaxed"
+                style={{ color: "rgba(255,255,255,0.5)" }}
+              >
+                {u.description}
+              </p>
+              <div>
+                <p
+                  className="font-raleway text-[8px] uppercase tracking-[0.22em] mb-2"
+                  style={{ color: "rgba(255,255,255,0.22)" }}
+                >
+                  Способности
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {u.powers.map((p) => (
+                    <span
+                      key={p}
+                      className="font-raleway text-xs px-3 py-1 rounded-full"
+                      style={{
+                        color: u.accent,
+                        background: `${u.accent}10`,
+                        border: `1px solid ${u.accent}28`,
+                      }}
+                    >
+                      {p}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </article>
+  );
+}
+
+export default function Index() {
+  const [openId, setOpenId] = useState<number | null>(null);
+  const [filter, setFilter] = useState("Все");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
+
+  const list = filter === "Все" ? UNICORNS : UNICORNS.filter((u) => u.rarity === filter);
 
   return (
-    <div
-      className="min-h-screen font-quicksand"
-      style={{
-        background: "linear-gradient(135deg, #0a0415 0%, #110a2e 40%, #0d1a3a 100%)",
-      }}
-    >
+    <div className="min-h-screen font-raleway" style={{ background: "#07070f" }}>
+      {/* Ambient blobs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div
-          className="absolute top-[-10%] left-[-5%] w-72 h-72 rounded-full blur-3xl animate-glow-pulse"
-          style={{ background: "rgba(139,92,246,0.15)" }}
+          className="absolute animate-drift"
+          style={{
+            top: "-20%", left: "-15%",
+            width: "70vw", height: "70vw",
+            maxWidth: 520, maxHeight: 520,
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(110,60,255,0.07) 0%, transparent 65%)",
+          }}
         />
         <div
-          className="absolute top-[30%] right-[-10%] w-64 h-64 rounded-full blur-3xl animate-glow-pulse"
-          style={{ background: "rgba(99,102,241,0.12)", animationDelay: "1s" }}
-        />
-        <div
-          className="absolute bottom-[10%] left-[20%] w-80 h-80 rounded-full blur-3xl animate-glow-pulse"
-          style={{ background: "rgba(236,72,153,0.1)", animationDelay: "2s" }}
+          className="absolute animate-drift"
+          style={{
+            bottom: "-15%", right: "-15%",
+            width: "55vw", height: "55vw",
+            maxWidth: 420, maxHeight: 420,
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(240,80,200,0.05) 0%, transparent 65%)",
+            animationDelay: "3s",
+          }}
         />
       </div>
 
-      <header className="relative px-5 pt-16 pb-8 text-center">
-        <div className="relative inline-block">
-          <p className="text-xs tracking-[0.3em] text-purple-300/60 uppercase font-nunito mb-3">
-            Magical Bestiary
+      {/* Header */}
+      <header className="relative px-5 pt-14 pb-5 max-w-lg mx-auto">
+        {/* Rule line */}
+        <div
+          className="flex items-center gap-3 mb-7"
+          style={{ opacity: mounted ? 1 : 0, transition: "opacity 0.6s ease" }}
+        >
+          <div className="h-px flex-1" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.12))" }} />
+          <p className="font-raleway text-[9px] tracking-[0.32em] uppercase" style={{ color: "rgba(255,255,255,0.22)" }}>
+            Магический Бестиарий
           </p>
-          <h1
-            className="font-nunito font-extrabold text-4xl leading-tight"
+          <div className="h-px flex-1" style={{ background: "linear-gradient(90deg, rgba(255,255,255,0.12), transparent)" }} />
+        </div>
+
+        {/* Title block */}
+        <div style={{ opacity: mounted ? 1 : 0, transform: mounted ? "none" : "translateY(20px)", transition: "all 0.7s cubic-bezier(0.16,1,0.3,1) 0.1s" }}>
+          <p
+            className="font-cormorant font-light"
+            style={{ fontSize: "clamp(3.2rem, 15vw, 5.5rem)", lineHeight: 0.9, letterSpacing: "-0.025em", color: "rgba(255,255,255,0.88)" }}
+          >
+            Виды
+          </p>
+          <p
+            className="font-cormorant italic"
             style={{
-              background: "linear-gradient(135deg, #e9d5ff 0%, #a78bfa 40%, #f9a8d4 80%, #fbcfe8 100%)",
+              fontSize: "clamp(3.2rem, 15vw, 5.5rem)",
+              lineHeight: 0.9,
+              letterSpacing: "-0.025em",
+              marginTop: "-0.05em",
+              background: "linear-gradient(120deg, #d8b4fe 0%, #a78bfa 45%, #f0abfc 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
             }}
           >
-            Unicorn
-            <br />
-            Types
-          </h1>
-          <span className="absolute -top-2 -right-4 text-yellow-300/70 animate-sparkle text-lg">✦</span>
-          <span
-            className="absolute top-8 -left-5 text-pink-300/60 animate-sparkle text-sm"
-            style={{ animationDelay: "0.5s" }}
-          >
-            ✦
-          </span>
+            единорогов
+          </p>
         </div>
 
-        <p className="text-white/40 text-sm mt-4 max-w-xs mx-auto font-quicksand leading-relaxed">
-          Ancient records of every magical unicorn species known across the realms
+        <p
+          className="font-cormorant italic mt-4 leading-relaxed"
+          style={{
+            fontSize: 15,
+            color: "rgba(255,255,255,0.28)",
+            opacity: mounted ? 1 : 0,
+            transition: "opacity 0.7s ease 0.25s",
+          }}
+        >
+          Древние записи о каждом магическом существе, известном в мирах
         </p>
 
-        <div className="flex justify-center gap-6 mt-6">
-          {[
-            { label: "Species", value: unicorns.length },
-            { label: "Realms", value: 5 },
-            { label: "Elements", value: 6 },
-          ].map((s) => (
-            <div key={s.label} className="text-center">
-              <p className="font-nunito font-bold text-2xl text-white/90">{s.value}</p>
-              <p className="text-white/35 text-xs uppercase tracking-wider">{s.label}</p>
+        {/* Stats */}
+        <div
+          className="flex gap-8 mt-6 pt-5"
+          style={{
+            borderTop: "1px solid rgba(255,255,255,0.05)",
+            opacity: mounted ? 1 : 0,
+            transition: "opacity 0.7s ease 0.35s",
+          }}
+        >
+          {[{ n: UNICORNS.length, l: "Видов" }, { n: 6, l: "Элементов" }, { n: 5, l: "Миров" }].map((s) => (
+            <div key={s.l}>
+              <p className="font-cormorant font-semibold text-2xl" style={{ color: "rgba(255,255,255,0.82)" }}>{s.n}</p>
+              <p className="font-raleway text-[8px] uppercase tracking-[0.22em] mt-0.5" style={{ color: "rgba(255,255,255,0.22)" }}>{s.l}</p>
             </div>
           ))}
         </div>
       </header>
 
-      <div className="px-5 mb-6 overflow-x-auto">
-        <div className="flex gap-2 w-max mx-auto pb-1">
-          {filters.map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`px-4 py-2 rounded-full text-xs font-semibold font-nunito whitespace-nowrap transition-all duration-300 ${
-                filter === f
-                  ? "bg-white/15 text-white border border-white/30 shadow-[0_0_15px_rgba(167,139,250,0.3)]"
-                  : "text-white/40 border border-white/10 hover:text-white/70 hover:border-white/20"
-              }`}
-            >
-              {f}
-            </button>
-          ))}
+      {/* Filters */}
+      <div
+        className="px-5 mb-4 max-w-lg mx-auto"
+        style={{ opacity: mounted ? 1 : 0, transition: "opacity 0.7s ease 0.45s" }}
+      >
+        <div className="flex flex-wrap gap-1.5">
+          {FILTERS.map((f) => {
+            const active = f === filter;
+            return (
+              <button
+                key={f}
+                onClick={() => { setFilter(f); setOpenId(null); }}
+                className="font-raleway text-[11px] tracking-wider px-3 py-1.5 rounded-lg transition-all duration-200"
+                style={{
+                  background: active ? "rgba(255,255,255,0.09)" : "transparent",
+                  color: active ? "rgba(255,255,255,0.82)" : "rgba(255,255,255,0.28)",
+                  border: `1px solid ${active ? "rgba(255,255,255,0.16)" : "rgba(255,255,255,0.05)"}`,
+                }}
+              >
+                {f}
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      <main className="px-4 pb-16 max-w-md mx-auto space-y-4">
-        {filtered.map((unicorn, i) => (
-          <UnicornCard key={unicorn.id} unicorn={unicorn} index={i} />
+      {/* Cards */}
+      <main className="px-5 pb-20 max-w-lg mx-auto space-y-2">
+        {list.map((u, i) => (
+          <Card
+            key={u.id}
+            u={u}
+            index={i}
+            open={openId === u.id}
+            onToggle={() => setOpenId(openId === u.id ? null : u.id)}
+          />
         ))}
       </main>
 
-      <footer className="text-center pb-10 px-5">
-        <p className="text-white/20 text-xs font-quicksand tracking-wider">
-          ✦ Tap any card to reveal powers ✦
+      <footer className="text-center pb-10">
+        <p className="font-cormorant italic text-sm" style={{ color: "rgba(255,255,255,0.12)" }}>
+          Нажмите на карточку, чтобы узнать больше
         </p>
       </footer>
     </div>
