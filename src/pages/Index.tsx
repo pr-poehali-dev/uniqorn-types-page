@@ -17,6 +17,7 @@ const UNICORNS = [
     tag: "ЛЕГЕНДА",
     description: "Рождённая из первого луча рассвета, Аврора ткёт ленты цвета по небосводу. Её грива переливается всеми оттенками радуги, а следы копыт превращаются в золотые цветы.",
     powers: ["Ткачество цвета", "Хождение во снах", "Аура исцеления"],
+    image: "https://cdn.poehali.dev/projects/b707820d-b663-4e18-b16b-3d3997d046cb/files/f6deca16-591d-4252-af99-bdc275ca2125.jpg",
   },
   {
     id: 2,
@@ -34,6 +35,7 @@ const UNICORNS = [
     tag: "МИФ",
     description: "Выкованная в сердце умирающих звёзд, Туманность несёт в себе целый космос. Звёзды рождаются там, где она скачет, и гаснут, когда она уходит.",
     powers: ["Создание звёзд", "Путешествие сквозь пустоту", "Изгиб гравитации"],
+    image: "https://cdn.poehali.dev/projects/b707820d-b663-4e18-b16b-3d3997d046cb/files/2eaa37cf-7d3a-4d79-9c90-aa442b963a8f.jpg",
   },
   {
     id: 3,
@@ -51,6 +53,7 @@ const UNICORNS = [
     tag: "РЕДКИЙ",
     description: "Кристаллизованный из древних ледников, Иней движется в тишине. Его дыхание формирует изящные снежинки — каждая единственная в своём роде.",
     powers: ["Ледяная скульптура", "Призыв метели", "Кристальное зрение"],
+    image: "https://cdn.poehali.dev/projects/b707820d-b663-4e18-b16b-3d3997d046cb/files/ec4424c0-6bd3-4325-873f-f8c1d5a9c60f.jpg",
   },
   {
     id: 4,
@@ -68,6 +71,7 @@ const UNICORNS = [
     tag: "ЭПОС",
     description: "Восставший из вулканических глубин, Уголёк пылает внутренним огнём. Его копыта оставляют тлеющие цветы, расцветающие в пламени.",
     powers: ["Танец пламени", "Хождение по лаве", "Возрождение Феникса"],
+    image: "https://cdn.poehali.dev/projects/b707820d-b663-4e18-b16b-3d3997d046cb/files/1b06a447-913f-4a9e-8a22-f111e411ca6d.jpg",
   },
   {
     id: 5,
@@ -85,6 +89,7 @@ const UNICORNS = [
     tag: "ЭПОС",
     description: "Сотканная из безлунных ночей, Тень живёт между мирами. Она хранит тайны, о которых даже звёзды не решаются шептать.",
     powers: ["Теневой шаг", "Чтение мыслей", "Страж кошмаров"],
+    image: "https://cdn.poehali.dev/projects/b707820d-b663-4e18-b16b-3d3997d046cb/files/1a1f7b44-9cc4-402f-9df5-4804f7ec1c5b.jpg",
   },
   {
     id: 6,
@@ -102,6 +107,7 @@ const UNICORNS = [
     tag: "ОБЫЧНЫЙ",
     description: "Там, где бежит Цветок, из голой земли вырастают дикие цветы. Его грива вечно вплетена живыми лозами и лепестками.",
     powers: ["Магия роста", "Буря лепестков", "Связь с природой"],
+    image: "https://cdn.poehali.dev/projects/b707820d-b663-4e18-b16b-3d3997d046cb/files/34807562-267d-4a63-b7a2-56f8a02cac65.jpg",
   },
 ];
 
@@ -243,6 +249,19 @@ function Card({
               style={{ background: `linear-gradient(90deg, transparent, ${u.accent}35, transparent)` }}
             />
             <div className="px-5 pb-5 space-y-4">
+              {u.image && (
+                <div
+                  className="rounded-xl overflow-hidden"
+                  style={{ border: `1px solid ${u.accent}25` }}
+                >
+                  <img
+                    src={u.image}
+                    alt={u.name}
+                    className="w-full object-cover"
+                    style={{ maxHeight: 220 }}
+                  />
+                </div>
+              )}
               <p
                 className="font-cormorant italic text-[15px] leading-relaxed"
                 style={{ color: "rgba(255,255,255,0.5)" }}
