@@ -386,19 +386,6 @@ export default function Index() {
           Древние записи о каждом магическом существе, известном в мирах
         </p>
 
-        {/* Dubai banner */}
-        <div
-          className="mt-6 rounded-2xl overflow-hidden"
-          style={{ opacity: mounted ? 1 : 0, transition: "opacity 0.7s ease 0.3s" }}
-        >
-          <img
-            src="https://cdn.poehali.dev/projects/b707820d-b663-4e18-b16b-3d3997d046cb/files/2207e21c-e880-4426-8369-fff4677d9716.jpg"
-            alt="Дубай с видом на море"
-            className="w-full object-cover"
-            style={{ height: 200, borderRadius: 16 }}
-          />
-        </div>
-
         {/* Stats */}
         <div
           className="flex gap-8 mt-6 pt-5"
